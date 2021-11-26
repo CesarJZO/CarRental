@@ -9,6 +9,7 @@ import java.util.*;
  * @author CésarJZO
  */
 public class Form extends JPanel {
+    // TODO Create an inner class Format with an array of attributes (txtFld, ComboBox, CheckBox) for each field
     private final JPanel[] panels;
     private final JLabel[] labels;
     private final JTextField[] txtFields;

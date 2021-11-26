@@ -44,7 +44,7 @@ public class App {
         logAdmin = new Form("Usuario", "Contraseña");
         empleados = new Form("ID Empleado", "ID Sucursal", "Nombre", "Apellido Paterno", "Apellido Materno", "Teléfono", "Correo");
         clientes = new Form("No. Licencia", "Nombre", "Apellido Paterno", "Apellido Materno", "Teléfono", "Correo", "ID Colonia", "ID Estado", "ID Ciudad", "Calle", "No. Casa");
-        rentas = new Form("ID Renta", "Placa", "ID Empleado", "No. Licencia", "Fecha Préstamo", "Fecha Devolución", "Dias Renta", "Monto Total", "Monto total garantía");
+        rentas = new Form("ID Renta", "Placa", "ID Empleado", "No. Licencia", "Fecha Préstamo", "Fecha Devolución", "Dias Renta");
 
         editPanel = new Central(
                 estadosAuto,
@@ -234,12 +234,27 @@ public class App {
             logAdmin.reset();
         });
         rentas.getInsBtn().addActionListener(e -> {
-            String query = "insert into rentas values (" + rentas.getInsertedValue("ID Renta") +
-                    ", '" + rentas.getInsertedValue("Placa") + "', " + rentas.getInsertedValue("ID Empleado") +
-                    ", " + rentas.getInsertedValue("No. Licencia") + ", '" + rentas.getInsertedValue("Fecha Préstamo") +
-                    "', '" + rentas.getInsertedValue("Fecha Devolución") + "', " + rentas.getInsertedValue("Dias Renta") +
-                    ", " + rentas.getInsertedValue("Monto Total") + ", " + rentas.getInsertedValue("Monto total garantía") +
-                    ")";
+            // TODO Add condition: if car is not available, not allow to rent it
+            String query = "";
+            try {
+                ResultSet rs = queries.execute("select precioDia, precioGarantia from modelos");
+                int daily = 0;
+                int warranty = 0;
+                while (rs.next()) {
+                    daily = Integer.parseInt(rs.getString("precioDia"));
+                    warranty = Integer.parseInt(rs.getString("precioGarantia"));
+                }
+                int times = Integer.parseInt(rentas.getInsertedValue("Dias Renta"));
+                query = "insert into rentas values (" + rentas.getInsertedValue("ID Renta") +
+                        ", '" + rentas.getInsertedValue("Placa") + "', " + rentas.getInsertedValue("ID Empleado") +
+                        ", " + rentas.getInsertedValue("No. Licencia") + ", '" + rentas.getInsertedValue("Fecha Préstamo") +
+                        "', '" + rentas.getInsertedValue("Fecha Devolución") + "', " + times +
+                        ", " + (times * daily) + ", " + (times * warranty) +
+                        ")";
+            } catch (SQLException exception) {
+                JOptionPane.showMessageDialog(window, exception.getMessage());
+            }
+
             System.out.println(query);
             queries.execute(query);
             rentas.reset();

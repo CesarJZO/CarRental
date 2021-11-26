@@ -39,4 +39,6 @@ public class Tables extends JPanel {
     public JComboBox<String> getComboTablas() {
         return comboTablas;
     }
+
+    // TODO Add an update() method
 }
