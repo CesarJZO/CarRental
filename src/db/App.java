@@ -60,9 +60,8 @@ public class App {
                 clientes,
                 rentas);
         editPanel.setVisibleOnly(autos);
-//        tablesPanel.setVisibleOnly(estadosAuto.dltPanel);
 
-        String[] tablas = {"EstadosAuto", "Marcas", "Modelos", "Autos", "Estados", "Ciudades", "Colonias", "Sucursales", "Administradores", "Empleados", "Clientes", "Rentas"};
+        String[] tablas = {"Estados Auto", "Marcas", "Modelos", "Autos", "Estados", "Ciudades", "Colonias", "Sucursales", "Administradores", "Empleados", "Clientes", "Rentas"};
 
         editPanel.addList(tablas);
 
@@ -237,12 +236,14 @@ public class App {
             // TODO Add condition: if car is not available, not allow to rent it
             String query = "";
             try {
-                ResultSet rs = queries.execute("select precioDia, precioGarantia from modelos");
+                ResultSet priceModel = queries.execute("select precioDia, precioGarantia " +
+                        "from modelos m, autos a where m.idModelo = a.idModelo and placa = '" +
+                        rentas.getInsertedValue("Placa") + "'");
                 int daily = 0;
                 int warranty = 0;
-                while (rs.next()) {
-                    daily = Integer.parseInt(rs.getString("precioDia"));
-                    warranty = Integer.parseInt(rs.getString("precioGarantia"));
+                while (priceModel.next()) {
+                    daily = Integer.parseInt(priceModel.getString("precioDia"));
+                    warranty = Integer.parseInt(priceModel.getString("precioGarantia"));
                 }
                 int times = Integer.parseInt(rentas.getInsertedValue("Dias Renta"));
                 query = "insert into rentas values (" + rentas.getInsertedValue("ID Renta") +
