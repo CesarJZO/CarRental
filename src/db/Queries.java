@@ -55,6 +55,9 @@ public class Queries {
         }
 
         return new DefaultTableModel(data, columnNames);
+    }
 
+    public void close() {
+        bridge.closeAll(rst, stmt, conn);
     }
 }

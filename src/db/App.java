@@ -535,6 +535,13 @@ public class App {
             }
         });
 
+        window.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                queries.close();
+            }
+        });
+
         window.setMainPanel(menu);
         window.setSize(490, 310);
         window.setResizable(false);
